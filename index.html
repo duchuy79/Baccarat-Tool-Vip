@@ -14,11 +14,8 @@
 <section class="core-box">
   <div class="core-label">AI DECISION</div>
 
-  <div id="coreDecision" class="core-decision wait">
-    WAIT
-  </div>
+  <div id="coreDecision" class="core-decision wait">WAIT</div>
 
-  <!-- CONTROLS -->
   <div class="controls">
     <button id="bB" class="btn banker">BANKER</button>
     <button id="bP" class="btn player">PLAYER</button>
@@ -30,8 +27,36 @@
 <!-- TABLE RATE -->
 <section class="rate-box">
   <div class="box-title">TABLE WIN RATE</div>
-  <div class="rate-row banker">BANKER <span id="rateB">0%</span></div>
-  <div class="rate-row player">PLAYER <span id="rateP">0%</span></div>
+
+  <div class="rate-item banker">
+    <div class="rate-header">
+      <span>BANKER</span>
+      <span id="rateB">0%</span>
+    </div>
+    <div class="rate-bar">
+      <div id="barB" class="rate-fill banker"></div>
+    </div>
+  </div>
+
+  <div class="rate-item player">
+    <div class="rate-header">
+      <span>PLAYER</span>
+      <span id="rateP">0%</span>
+    </div>
+    <div class="rate-bar">
+      <div id="barP" class="rate-fill player"></div>
+    </div>
+  </div>
+
+  <div class="tool-rate">
+    <div class="rate-header">
+      <span>TOOL WIN RATE</span>
+      <span id="toolRate">0%</span>
+    </div>
+    <div class="rate-bar">
+      <div id="toolBar" class="rate-fill tool"></div>
+    </div>
+  </div>
 </section>
 
 <!-- HISTORY -->
