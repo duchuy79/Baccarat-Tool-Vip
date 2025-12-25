@@ -1,97 +1,81 @@
 import { decisionEngine } from './engine.js';
-import { initHeat, updateHeat } from './heatmap.js';
-import { tick, reset } from './session.js';
+import { initHeat, heatMap } from './heatmap.js';
 
-const history = [];
-let pending = null;
-let toolLog = [];
+const history=[], toolLog=[];
+let pending=null;
 
-initHeat(['TREND','ANTI-TREND','PATTERN','WINDOW']);
+initHeat(
+  ['TREND','ANTI_TREND','PATTERN','WINDOW','MIRROR'],
+  ['TREND','TRANSITION','NOISE','UNKNOWN']
+);
 
-/* ========= MOBILE SAFE BIND ========= */
-function bind(id, fn){
-  const el = document.getElementById(id);
-  if(!el) return;
-  el.addEventListener('click', fn);
-  el.addEventListener('touchstart', e=>{
-    e.preventDefault();
-    fn();
-  }, { passive:false });
+function bind(id,fn){
+  const e=document.getElementById(id);
+  e.addEventListener('click',fn);
+  e.addEventListener('touchstart',ev=>{
+    ev.preventDefault();fn();
+  },{passive:false});
 }
 
-/* ========= RENDER ========= */
 function render(){
-  const d = decisionEngine(history);
-  const el = document.getElementById('coreDecision');
+  const d=decisionEngine(history,toolLog);
+  const el=document.getElementById('decision');
 
-  if(d.action === 'WAIT'){
-    el.className = 'core-decision wait';
-    el.textContent = 'WAIT';
+  if(d.action==='WAIT'){
+    el.className='core-decision wait';
+    el.textContent=d.locked?'LOCK':'WAIT';
+    pending=null;
   }else{
-    el.className = 'core-decision ' + (d.pred === 'B' ? 'banker pulse' : 'player pulse');
-    el.textContent = d.pred === 'B' ? 'BANKER' : 'PLAYER';
-    pending = { pred:d.pred, method:d.method, phase:d.phase };
+    el.className='core-decision '+(d.pred==='B'?'banker pulse':'player pulse');
+    el.textContent=d.pred;
+    pending=d;
   }
 
-  // Table rate
-  const total = history.length || 1;
-  const b = history.filter(x=>x==='B').length;
-  const rb = Math.round(b / total * 100);
+  const total=history.length||1;
+  const b=history.filter(x=>x==='B').length;
+  document.getElementById('rateB').textContent=Math.round(b/total*100)+'%';
+  document.getElementById('rateP').textContent=100-Math.round(b/total*100)+'%';
+  document.getElementById('barB').style.width=b/total*100+'%';
+  document.getElementById('barP').style.width=(1-b/total)*100+'%';
 
-  document.getElementById('rateB').textContent = rb + '%';
-  document.getElementById('rateP').textContent = (100 - rb) + '%';
-  document.getElementById('barB').style.width = rb + '%';
-  document.getElementById('barP').style.width = (100 - rb) + '%';
+  const wins=toolLog.filter(x=>x==='WIN').length;
+  const tr=toolLog.length?Math.round(wins/toolLog.length*100):0;
+  const tb=document.getElementById('toolBar');
+  document.getElementById('toolRate').textContent=tr+'%';
+  tb.style.width=tr+'%';
+  tb.className=tr>=55?'good':tr>=50?'mid':'bad';
 
-  // Tool rate
-  const wins = toolLog.filter(x=>x.r === 'WIN').length;
-  const tr = toolLog.length ? Math.round(wins / toolLog.length * 100) : 0;
-
-  const tb = document.getElementById('toolBar');
-  document.getElementById('toolRate').textContent = tr + '%';
-  tb.style.width = tr + '%';
-  tb.className =
-    'rate-fill tool ' +
-    (tr >= 55 ? 'good' : tr >= 50 ? 'mid' : 'bad');
+  const h=document.getElementById('history');
+  h.innerHTML='';
+  history.forEach(v=>{
+    const d=document.createElement('div');
+    d.className='his-item '+(v==='B'?'his-b':'his-p');
+    d.textContent=v;
+    h.appendChild(d);
+  });
 }
 
-/* ========= RESOLVE ========= */
-function resolve(actual){
-  if(!pending) return;
-  const r = pending.pred === actual ? 'WIN' : 'LOSE';
-  toolLog.push({ r, ...pending });
-  updateHeat(pending.phase, pending.method, r);
-  pending = null;
-}
-
-/* ========= BUTTONS ========= */
-bind('bB', ()=>{
-  resolve('B');
-  history.push('B');
-  tick();
-  render();
+bind('btnB',()=>{
+  if(pending){
+    const r=pending.pred==='B'?'WIN':'LOSE';
+    toolLog.push(r);
+    const h=heatMap[pending.phase][pending.method];
+    r==='WIN'?h.w++:h.l++;
+  }
+  history.push('B'); render();
 });
 
-bind('bP', ()=>{
-  resolve('P');
-  history.push('P');
-  tick();
-  render();
+bind('btnP',()=>{
+  if(pending){
+    const r=pending.pred==='P'?'WIN':'LOSE';
+    toolLog.push(r);
+    const h=heatMap[pending.phase][pending.method];
+    r==='WIN'?h.w++:h.l++;
+  }
+  history.push('P'); render();
 });
 
-bind('bU', ()=>{
-  history.pop();
-  toolLog.pop();
-  pending = null;
-  render();
-});
-
-bind('bR', ()=>{
-  history.length = 0;
-  toolLog.length = 0;
-  pending = null;
-  reset();
-  render();
-});
+bind('btnU',()=>{history.pop();toolLog.pop();pending=null;render();});
+bind('btnR',()=>{history.length=0;toolLog.length=0;pending=null;render();});
 
 render();
