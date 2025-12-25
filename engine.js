@@ -2,21 +2,29 @@ import * as M from './methods.js';
 import { detectPhase } from './phase.js';
 import { heatBonus } from './heatmap.js';
 
-export function decisionEngine(hist){
-  const phase=detectPhase(hist);
-  const list=[
-    M.trend(hist),
-    M.antiTrend(hist),
-    M.pattern(hist),
-    M.windowVote(hist)
+export function decisionEngine(history, toolLog){
+  const phase=detectPhase(history);
+
+  if(toolLog.length>=6){
+    const w=toolLog.filter(x=>x==='WIN').length;
+    if(w/toolLog.length<0.45)
+      return {action:'WAIT',locked:true};
+  }
+
+  let list=[
+    M.trend(history),
+    M.antiTrend(history),
+    M.pattern(history),
+    M.windowVote(history),
+    M.mirror(history)
   ].filter(Boolean);
 
-  if(!list.length) return {action:'WAIT',phase};
+  if(!list.length) return {action:'WAIT'};
 
-  list.forEach(r=>r.conf*=heatBonus(phase,r.name));
+  list.forEach(r=>r.conf*=heatBonus(phase,r.method));
   list.sort((a,b)=>b.conf-a.conf);
-  const best=list[0];
 
-  if(best.conf<.55) return {action:'WAIT',phase};
-  return {action:'PLAY',pred:best.pred,method:best.name,phase};
+  if(list[0].conf<0.55) return {action:'WAIT'};
+
+  return {action:'PLAY',...list[0],phase};
 }
