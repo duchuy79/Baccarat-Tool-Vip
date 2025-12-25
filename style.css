@@ -1,20 +1,141 @@
-/* ===== TABLE RATE ===== */
+:root{
+  --bg:#060a12;
+  --panel:#0e1524;
+  --border:rgba(255,255,255,.08);
+  --cyan:#33f0ff;
+  --blue:#33b1ff;
+  --red:#ff3c3c;
+  --yellow:#ffd700;
+  --muted:#9fb7ff;
+}
 
-.rate-box{
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:linear-gradient(180deg,#05080f,#070c18);
+  color:#fff;
+  font-family:system-ui,-apple-system,sans-serif;
+}
+
+header{
+  text-align:center;
+  padding:18px;
+  font-weight:900;
+  letter-spacing:4px;
+  color:var(--cyan);
+}
+
+.core-box,
+.rate-box,
+.history-box{
   margin:12px;
-  padding:14px;
+  padding:16px;
   background:linear-gradient(180deg,#0d1424,#0b1120);
   border:1px solid var(--border);
-  border-radius:16px;
+  border-radius:18px;
 }
 
-.rate-row{
+.core-box{text-align:center}
+
+.core-label{
+  font-size:12px;
+  letter-spacing:3px;
+  color:var(--muted);
+}
+
+.core-decision{
+  font-size:34px;
+  font-weight:900;
+  margin:10px 0;
+}
+
+.wait{color:var(--yellow)}
+.banker{color:var(--red)}
+.player{color:var(--blue)}
+
+.controls{
+  margin-top:16px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.btn{
+  padding:14px 0;
+  font-weight:900;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:#111a2f;
+  color:#fff;
+}
+
+.btn:active{transform:scale(.96)}
+.btn.neutral{background:#1a1a1a}
+.btn.danger{background:#2a1212}
+
+.box-title{
+  font-size:12px;
+  letter-spacing:2px;
+  color:var(--muted);
+  margin-bottom:10px;
+}
+
+/* RATE BAR */
+
+.rate-item{margin-bottom:14px}
+
+.rate-header{
   display:flex;
   justify-content:space-between;
-  padding:8px 0;
   font-weight:800;
-  letter-spacing:1px;
+  margin-bottom:6px;
 }
 
-.rate-row.banker{ color:var(--red); }
-.rate-row.player{ color:var(--blue); }
+.rate-bar{
+  height:10px;
+  background:#0b1020;
+  border-radius:999px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.06);
+}
+
+.rate-fill{
+  height:100%;
+  width:0%;
+  transition:width .3s ease;
+}
+
+.rate-fill.banker{
+  background:linear-gradient(90deg,#ff3c3c,#ff6b6b);
+}
+
+.rate-fill.player{
+  background:linear-gradient(90deg,#33b1ff,#66ccff);
+}
+
+/* TOOL RATE COLORS */
+
+.tool-rate{
+  margin-top:18px;
+  padding-top:12px;
+  border-top:1px dashed rgba(255,255,255,.12);
+}
+
+.rate-fill.tool.good{
+  background:linear-gradient(90deg,#00ffaa,#33f0ff);
+}
+
+.rate-fill.tool.mid{
+  background:linear-gradient(90deg,#33b1ff,#66ccff);
+}
+
+.rate-fill.tool.bad{
+  background:linear-gradient(90deg,#ff3c3c,#ff6b6b);
+}
+
+#history{
+  font-size:13px;
+  letter-spacing:2px;
+  color:#9fb7ff;
+}
