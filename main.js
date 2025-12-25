@@ -1,83 +1,48 @@
 import { decisionEngine } from './engine.js';
-import { history, add, undo } from './storage.js';
+import { initHeat, updateHeat } from './heatmap.js';
+import { tick, reset } from './session.js';
 
-let lastPrediction = null;
-let toolWin = 0;
-let toolLose = 0;
+const history=[];
+let pending=null;
+let toolLog=[];
+
+initHeat(['TREND','ANTI-TREND','PATTERN','WINDOW']);
 
 function render(){
-  const d = decisionEngine(history);
+  const d=decisionEngine(history);
+  const el=document.getElementById('coreDecision');
+  el.className='core-decision '+(d.action==='WAIT'?'wait':d.pred==='B'?'banker pulse':'player pulse');
+  el.textContent=d.action==='WAIT'?'WAIT':d.pred==='B'?'BANKER':'PLAYER';
 
-  // DECISION
-  const decisionEl = document.getElementById('coreDecision');
-  decisionEl.className =
-    'core-decision ' +
-    (d.action === 'WAIT' ? 'wait' : d.pred === 'B' ? 'banker' : 'player');
+  if(d.action==='PLAY') pending={pred:d.pred,method:d.method,phase:d.phase};
 
-  decisionEl.textContent =
-    d.action === 'WAIT' ? 'WAIT' : d.pred === 'B' ? 'BANKER' : 'PLAYER';
+  const total=history.length||1;
+  const b=history.filter(x=>x==='B').length;
+  const rb=Math.round(b/total*100);
+  document.getElementById('rateB').textContent=rb+'%';
+  document.getElementById('rateP').textContent=(100-rb)+'%';
+  document.getElementById('barB').style.width=rb+'%';
+  document.getElementById('barP').style.width=(100-rb)+'%';
 
-  if(d.action === 'PLAY'){
-    lastPrediction = d.pred;
-  }
-
-  // TABLE RATE
-  const total = history.length || 1;
-  const countB = history.filter(x=>x==='B').length;
-  const rateB = Math.round((countB / total) * 100);
-  const rateP = 100 - rateB;
-
-  document.getElementById('rateB').textContent = rateB + '%';
-  document.getElementById('rateP').textContent = rateP + '%';
-  document.getElementById('barB').style.width = rateB + '%';
-  document.getElementById('barP').style.width = rateP + '%';
-
-  // TOOL RATE
-  const totalTool = toolWin + toolLose;
-  const toolRate = totalTool === 0 ? 0 : Math.round((toolWin / totalTool) * 100);
-
-  const toolBar = document.getElementById('toolBar');
-  document.getElementById('toolRate').textContent = toolRate + '%';
-  toolBar.style.width = toolRate + '%';
-  toolBar.className = 'rate-fill tool';
-
-  if(toolRate >= 55) toolBar.classList.add('good');
-  else if(toolRate >= 50) toolBar.classList.add('mid');
-  else toolBar.classList.add('bad');
-
-  document.getElementById('history').textContent = history.join(' ');
+  const wins=toolLog.filter(x=>x.r==='WIN').length;
+  const tr=toolLog.length?Math.round(wins/toolLog.length*100):0;
+  const tb=document.getElementById('toolBar');
+  document.getElementById('toolRate').textContent=tr+'%';
+  tb.style.width=tr+'%';
+  tb.className='rate-fill tool '+(tr>=55?'good':tr>=50?'mid':'bad');
 }
 
-// BUTTONS
-document.getElementById('bB').onclick = ()=>{
-  if(lastPrediction){
-    lastPrediction === 'B' ? toolWin++ : toolLose++;
-    lastPrediction = null;
-  }
-  add('B');
-  render();
-};
+function resolve(a){
+  if(!pending) return;
+  const r=pending.pred===a?'WIN':'LOSE';
+  toolLog.push({r,...pending});
+  updateHeat(pending.phase,pending.method,r);
+  pending=null;
+}
 
-document.getElementById('bP').onclick = ()=>{
-  if(lastPrediction){
-    lastPrediction === 'P' ? toolWin++ : toolLose++;
-    lastPrediction = null;
-  }
-  add('P');
-  render();
-};
-
-document.getElementById('bU').onclick = ()=>{
-  undo();
-  render();
-};
-
-document.getElementById('bR').onclick = ()=>{
-  history.length = 0;
-  toolWin = 0;
-  toolLose = 0;
-  lastPrediction = null;
-  render();
-};
+bB.onclick=()=>{resolve('B');history.push('B');tick();render();}
+bP.onclick=()=>{resolve('P');history.push('P');tick();render();}
+bU.onclick=()=>{history.pop();toolLog.pop();pending=null;render();}
+bR.onclick=()=>{history.length=0;toolLog.length=0;pending=null;reset();render();}
 
 render();
