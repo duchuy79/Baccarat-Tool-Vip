@@ -1,3 +1,3 @@
-export let rounds=0;
-export function tick(){rounds++}
-export function reset(){rounds=0}
+export let rounds = 0;
+export function tickSession(){ rounds++; }
+export function resetSession(){ rounds = 0; }
