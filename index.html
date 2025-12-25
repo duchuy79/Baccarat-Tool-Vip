@@ -10,10 +10,8 @@
 
 <header>META AI CORE</header>
 
-<!-- DECISION CORE -->
 <section class="core-box">
   <div class="core-label">AI DECISION</div>
-
   <div id="coreDecision" class="core-decision wait">WAIT</div>
 
   <div class="controls">
@@ -24,45 +22,23 @@
   </div>
 </section>
 
-<!-- TABLE RATE -->
 <section class="rate-box">
-  <div class="box-title">TABLE WIN RATE</div>
+  <div class="box-title">TABLE & TOOL WIN RATE</div>
 
   <div class="rate-item banker">
-    <div class="rate-header">
-      <span>BANKER</span>
-      <span id="rateB">0%</span>
-    </div>
-    <div class="rate-bar">
-      <div id="barB" class="rate-fill banker"></div>
-    </div>
+    <div class="rate-header"><span>BANKER</span><span id="rateB">0%</span></div>
+    <div class="rate-bar"><div id="barB" class="rate-fill banker"></div></div>
   </div>
 
   <div class="rate-item player">
-    <div class="rate-header">
-      <span>PLAYER</span>
-      <span id="rateP">0%</span>
-    </div>
-    <div class="rate-bar">
-      <div id="barP" class="rate-fill player"></div>
-    </div>
+    <div class="rate-header"><span>PLAYER</span><span id="rateP">0%</span></div>
+    <div class="rate-bar"><div id="barP" class="rate-fill player"></div></div>
   </div>
 
   <div class="tool-rate">
-    <div class="rate-header">
-      <span>TOOL WIN RATE</span>
-      <span id="toolRate">0%</span>
-    </div>
-    <div class="rate-bar">
-      <div id="toolBar" class="rate-fill tool"></div>
-    </div>
+    <div class="rate-header"><span>TOOL WIN RATE</span><span id="toolRate">0%</span></div>
+    <div class="rate-bar"><div id="toolBar" class="rate-fill tool"></div></div>
   </div>
-</section>
-
-<!-- HISTORY -->
-<section class="history-box">
-  <div class="box-title">HISTORY</div>
-  <div id="history"></div>
 </section>
 
 <script type="module" src="main.js"></script>
