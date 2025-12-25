@@ -1,21 +1,18 @@
 :root{
-  --bg:#060a12;
+  --bg:#05080f;
   --panel:#0e1524;
   --border:rgba(255,255,255,.08);
   --cyan:#33f0ff;
   --blue:#33b1ff;
   --red:#ff3c3c;
   --yellow:#ffd700;
-  --muted:#9fb7ff;
 }
-
-*{box-sizing:border-box}
 
 body{
   margin:0;
   background:linear-gradient(180deg,#05080f,#070c18);
   color:#fff;
-  font-family:system-ui,-apple-system,sans-serif;
+  font-family:system-ui;
 }
 
 header{
@@ -26,64 +23,53 @@ header{
   color:var(--cyan);
 }
 
-.core-box,
-.rate-box,
-.history-box{
+.core-box,.rate-box{
   margin:12px;
   padding:16px;
   background:linear-gradient(180deg,#0d1424,#0b1120);
   border:1px solid var(--border);
   border-radius:18px;
+  box-shadow:0 0 18px rgba(51,240,255,.25);
+  text-align:center;
 }
-
-.core-box{text-align:center}
 
 .core-label{
   font-size:12px;
   letter-spacing:3px;
-  color:var(--muted);
+  color:#9fb7ff;
 }
 
 .core-decision{
-  font-size:34px;
+  font-size:36px;
   font-weight:900;
-  margin:10px 0;
+  margin:12px 0;
 }
 
 .wait{color:var(--yellow)}
 .banker{color:var(--red)}
 .player{color:var(--blue)}
 
+@keyframes pulse{
+  0%{transform:scale(1);opacity:.9}
+  50%{transform:scale(1.06);opacity:1}
+  100%{transform:scale(1);opacity:.9}
+}
+.pulse{animation:pulse .9s ease-in-out infinite}
+
 .controls{
-  margin-top:16px;
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:10px;
 }
 
 .btn{
-  padding:14px 0;
+  padding:14px;
   font-weight:900;
   border-radius:12px;
   border:1px solid var(--border);
   background:#111a2f;
   color:#fff;
 }
-
-.btn:active{transform:scale(.96)}
-.btn.neutral{background:#1a1a1a}
-.btn.danger{background:#2a1212}
-
-.box-title{
-  font-size:12px;
-  letter-spacing:2px;
-  color:var(--muted);
-  margin-bottom:10px;
-}
-
-/* RATE BAR */
-
-.rate-item{margin-bottom:14px}
 
 .rate-header{
   display:flex;
@@ -97,7 +83,6 @@ header{
   background:#0b1020;
   border-radius:999px;
   overflow:hidden;
-  border:1px solid rgba(255,255,255,.06);
 }
 
 .rate-fill{
@@ -106,36 +91,14 @@ header{
   transition:width .3s ease;
 }
 
-.rate-fill.banker{
-  background:linear-gradient(90deg,#ff3c3c,#ff6b6b);
-}
-
-.rate-fill.player{
-  background:linear-gradient(90deg,#33b1ff,#66ccff);
-}
-
-/* TOOL RATE COLORS */
+.rate-fill.banker{background:linear-gradient(90deg,#ff3c3c,#ff6b6b)}
+.rate-fill.player{background:linear-gradient(90deg,#33b1ff,#66ccff)}
+.rate-fill.tool.good{background:linear-gradient(90deg,#00ffaa,#33f0ff)}
+.rate-fill.tool.mid{background:linear-gradient(90deg,#33b1ff,#66ccff)}
+.rate-fill.tool.bad{background:linear-gradient(90deg,#ff3c3c,#ff6b6b)}
 
 .tool-rate{
   margin-top:18px;
   padding-top:12px;
-  border-top:1px dashed rgba(255,255,255,.12);
-}
-
-.rate-fill.tool.good{
-  background:linear-gradient(90deg,#00ffaa,#33f0ff);
-}
-
-.rate-fill.tool.mid{
-  background:linear-gradient(90deg,#33b1ff,#66ccff);
-}
-
-.rate-fill.tool.bad{
-  background:linear-gradient(90deg,#ff3c3c,#ff6b6b);
-}
-
-#history{
-  font-size:13px;
-  letter-spacing:2px;
-  color:#9fb7ff;
+  border-top:1px dashed rgba(255,255,255,.15);
 }
