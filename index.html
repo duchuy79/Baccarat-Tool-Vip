@@ -3,23 +3,42 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>META AI CORE v1.0</title>
+  <title>META AI CORE</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>META AI CORE v1.0</header>
+<header>META AI CORE</header>
 
-<section id="core"></section>
-<section id="status"></section>
+<!-- DECISION CORE -->
+<section class="core-box">
+  <div class="core-label">AI DECISION</div>
 
-<div class="controls">
-  <button id="bB">Banker</button>
-  <button id="bP">Player</button>
-  <button id="bU">Undo</button>
-</div>
+  <div id="coreDecision" class="core-decision wait">
+    WAIT
+  </div>
 
-<section id="history"></section>
+  <!-- CONTROLS -->
+  <div class="controls">
+    <button id="bB" class="btn banker">BANKER</button>
+    <button id="bP" class="btn player">PLAYER</button>
+    <button id="bU" class="btn neutral">UNDO</button>
+    <button id="bR" class="btn danger">RESET</button>
+  </div>
+</section>
+
+<!-- TABLE RATE -->
+<section class="rate-box">
+  <div class="box-title">TABLE WIN RATE</div>
+  <div class="rate-row banker">BANKER <span id="rateB">0%</span></div>
+  <div class="rate-row player">PLAYER <span id="rateP">0%</span></div>
+</section>
+
+<!-- HISTORY -->
+<section class="history-box">
+  <div class="box-title">HISTORY</div>
+  <div id="history"></div>
+</section>
 
 <script type="module" src="main.js"></script>
 </body>
