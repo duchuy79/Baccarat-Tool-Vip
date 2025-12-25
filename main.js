@@ -1,34 +1,25 @@
-import { decisionEngine } from './engine.js';
-import { history, add, undo } from './storage.js';
-
-const log=[];
-
 function render(){
   const d = decisionEngine(history);
 
-  document.getElementById('core').innerHTML = `
-    <div class="label">DECISION</div>
-    <div class="decision ${d.action==='WAIT'?'wait':d.pred==='B'?'banker':'player'}">
-      ${d.action==='WAIT'?'WAIT':d.pred==='B'?'BANKER':'PLAYER'}
-    </div>
-    <div class="label">STATE</div>
-    <div>${d.state}</div>
-    <div class="label">ENGINE</div>
-    <div>${d.engine}</div>
-  `;
+  // ===== DECISION =====
+  const decisionEl = document.getElementById('coreDecision');
+  decisionEl.className = 'core-decision ' +
+    (d.action === 'WAIT' ? 'wait' : d.pred === 'B' ? 'banker' : 'player');
 
-  log.push(`${d.action} | ${d.state} | ${d.engine}`);
-  if(log.length>10) log.shift();
+  decisionEl.textContent =
+    d.action === 'WAIT' ? 'WAIT' : d.pred === 'B' ? 'BANKER' : 'PLAYER';
 
-  document.getElementById('status').textContent =
-    d.reason + '\n\nLAST DECISIONS:\n' + log.join('\n');
+  // ===== TABLE RATE =====
+  const total = history.length || 1;
+  const countB = history.filter(x=>x==='B').length;
+  const countP = history.filter(x=>x==='P').length;
 
-  document.getElementById('history').textContent =
-    history.join(' ');
+  const rateB = Math.round((countB / total) * 100);
+  const rateP = 100 - rateB;
+
+  document.getElementById('rateB').textContent = rateB + '%';
+  document.getElementById('rateP').textContent = rateP + '%';
+
+  // ===== HISTORY =====
+  document.getElementById('history').textContent = history.join(' ');
 }
-
-document.getElementById('bB').onclick=()=>{ add('B'); render(); };
-document.getElementById('bP').onclick=()=>{ add('P'); render(); };
-document.getElementById('bU').onclick=()=>{ undo(); render(); };
-
-render();
