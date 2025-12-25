@@ -1,30 +1,22 @@
+import * as M from './methods.js';
+import { detectPhase } from './phase.js';
+import { heatBonus } from './heatmap.js';
+
 export function decisionEngine(hist){
-  if(hist.length < 6)
-    return { action:'WAIT' };
+  const phase=detectPhase(hist);
+  const list=[
+    M.trend(hist),
+    M.antiTrend(hist),
+    M.pattern(hist),
+    M.windowVote(hist)
+  ].filter(Boolean);
 
-  if(isNoise(hist))
-    return { action:'WAIT' };
+  if(!list.length) return {action:'WAIT',phase};
 
-  const s = streak(hist);
+  list.forEach(r=>r.conf*=heatBonus(phase,r.name));
+  list.sort((a,b)=>b.conf-a.conf);
+  const best=list[0];
 
-  if(s>=3 && s<=6)
-    return { action:'PLAY', pred: hist.at(-1) };
-
-  return { action:'WAIT' };
-}
-
-function isNoise(h){
-  let alt=0;
-  for(let i=1;i<h.length;i++)
-    if(h[i]!==h[i-1]) alt++;
-  return alt/(h.length-1)>0.6;
-}
-
-function streak(h){
-  let s=1;
-  for(let i=h.length-2;i>=0;i--){
-    if(h[i]===h.at(-1)) s++;
-    else break;
-  }
-  return s;
+  if(best.conf<.55) return {action:'WAIT',phase};
+  return {action:'PLAY',pred:best.pred,method:best.name,phase};
 }
