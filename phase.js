@@ -7,13 +7,15 @@ export function detectPhase(hist){
   }
   const altRate = alt / (hist.length-1);
 
-  let s=1, last=hist[hist.length-1];
+  let s = 1;
+  const last = hist[hist.length-1];
   for(let i=hist.length-2;i>=0;i--){
-    if(hist[i]===last) s++; else break;
+    if(hist[i]===last) s++;
+    else break;
   }
 
-  if(s>=4 && altRate<0.3) return 'TREND';
-  if(altRate>0.6) return 'NOISE';
-  if(s>=3 && altRate>0.4) return 'TRANSITION';
+  if(s >= 4 && altRate < 0.3) return 'TREND';
+  if(altRate > 0.6) return 'NOISE';
+  if(s >= 3 && altRate > 0.4) return 'TRANSITION';
   return 'UNKNOWN';
 }
