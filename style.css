@@ -1,80 +1,20 @@
-:root{
-  --bg:#070b12;
-  --panel:#0e1420;
-  --border:rgba(255,255,255,.08);
-  --cyan:#33f0ff;
-  --blue:#33b1ff;
-  --red:#ff3c3c;
-  --yellow:#ffd700;
-}
+/* ===== TABLE RATE ===== */
 
-body{
-  margin:0;
-  background:var(--bg);
-  color:#fff;
-  font-family:system-ui,-apple-system,sans-serif;
-}
-
-header{
-  text-align:center;
-  padding:16px;
-  font-weight:900;
-  letter-spacing:3px;
-  color:var(--cyan);
-}
-
-section{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:14px;
+.rate-box{
+  margin:12px;
   padding:14px;
-  margin:10px;
-}
-
-#core{text-align:center}
-
-.label{
-  font-size:12px;
-  letter-spacing:2px;
-  color:#9fe8ff;
-}
-
-.decision{
-  font-size:28px;
-  font-weight:900;
-  margin:6px 0;
-}
-
-.wait{color:var(--yellow)}
-.banker{color:var(--red)}
-.player{color:var(--blue)}
-
-#status{
-  font-size:13px;
-  white-space:pre-line;
-  color:#cfefff;
-}
-
-.controls{
-  display:flex;
-  gap:8px;
-  margin:10px;
-}
-
-button{
-  flex:1;
-  padding:12px;
-  font-weight:800;
-  background:#121a2a;
+  background:linear-gradient(180deg,#0d1424,#0b1120);
   border:1px solid var(--border);
-  color:#fff;
-  border-radius:10px;
+  border-radius:16px;
 }
 
-button:active{transform:scale(.96)}
-
-#history{
-  font-size:13px;
-  color:#9fe8ff;
-  letter-spacing:2px;
+.rate-row{
+  display:flex;
+  justify-content:space-between;
+  padding:8px 0;
+  font-weight:800;
+  letter-spacing:1px;
 }
+
+.rate-row.banker{ color:var(--red); }
+.rate-row.player{ color:var(--blue); }
